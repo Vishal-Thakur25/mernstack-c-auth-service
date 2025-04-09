@@ -16,7 +16,7 @@ const logger = winston.createLogger({
                 winston.format.timestamp(),
                 winston.format.json(),
             ),
-            silent: false, // disable logging to file
+            silent: Config.NODE_ENV === 'test', // disable logging to file
         }),
         new winston.transports.File({
             level: 'error',
@@ -26,7 +26,7 @@ const logger = winston.createLogger({
                 winston.format.timestamp(),
                 winston.format.json(),
             ),
-            silent: false,
+            silent: Config.NODE_ENV === 'test',
         }),
         new winston.transports.Console({
             level: 'info',
