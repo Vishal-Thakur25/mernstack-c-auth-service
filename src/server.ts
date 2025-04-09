@@ -1,5 +1,10 @@
-function Welcome(name: string) {
-    return name
-}
+// function Welcome(name: string) {
+//     return name
+// }
 
-Welcome('Singh')
+import { Config } from './config'
+
+// Welcome('Singh')
+
+// If we want to use env variable in our function
+console.log(Config.PORT)
