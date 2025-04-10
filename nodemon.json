@@ -3,5 +3,8 @@
     "ext": "ts,json",
     "execMap": {
         "ts": "ts-node --swc"
-    }
+    },
+    "exec": "ts-node --swc src/server.ts",
+    "legacyWatch": true,
+    "pollingInterval": 1000
 }
