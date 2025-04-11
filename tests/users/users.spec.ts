@@ -56,10 +56,8 @@ describe('POST /auth/register', () => {
             };
 
             // Act
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const res = await request(app)
-                .post('/auth/register')
-                .send(userData);
+
+            await request(app).post('/auth/register').send(userData);
 
             // Assert
         });

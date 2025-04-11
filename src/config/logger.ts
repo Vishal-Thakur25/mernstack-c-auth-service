@@ -1,5 +1,5 @@
-import winston from 'winston'
-import { Config } from '.'
+import winston from 'winston';
+import { Config } from '.';
 
 const logger = winston.createLogger({
     level: 'info',
@@ -37,6 +37,6 @@ const logger = winston.createLogger({
             silent: Config.NODE_ENV === 'test',
         }),
     ],
-})
+});
 
-export default logger
+export default logger;
