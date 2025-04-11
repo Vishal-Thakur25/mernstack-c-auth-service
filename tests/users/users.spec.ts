@@ -88,7 +88,7 @@ describe('POST /auth/register', () => {
             expect(users[0].firstName).toBe(userData.firstName);
             expect(users[0].lastName).toBe(userData.lastName);
             expect(users[0].email).toBe(userData.email);
-            expect(users[0].password).toBe(userData.password);
+            // expect(users[0].password).toBe(userData.password);
         });
 
         it('should return the id of the user', async () => {
@@ -125,6 +125,60 @@ describe('POST /auth/register', () => {
             const users = await userRepository.find();
             expect(users[0]).toHaveProperty('role');
             expect(users[0].role).toBe(Roles.CUSTOMER);
+        });
+
+        it('should store the hashed password in database', async () => {
+            const userData = {
+                firstName: 'Vishal',
+                lastName: 'Singh',
+                email: 'vishal@gmail.com',
+                password: '123456',
+            };
+
+            await request(app).post('/auth/register').send(userData);
+
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+
+            console.log(users[0].password);
+
+            expect(users[0].password).not.toBe(userData.password);
+
+            expect(users[0].password).toHaveLength(60);
+            expect(users[0].password).toMatch(/^\$2b\$\d+\$/);
+        });
+        it('should return 400 status if email already exist in database', async () => {
+            const userData = {
+                firstName: 'Vishal',
+                lastName: 'Singh',
+                email: 'vishal@gmail.com',
+                password: '123456',
+            };
+
+            const userRepository = connection.getRepository(User);
+
+            await userRepository.save({
+                ...userData,
+                role: Roles.CUSTOMER,
+            });
+
+            // const existingEmail = await users.findOne({
+            //     where: { email: userData.email },
+            // });
+
+            const response = await request(app)
+                .post('/auth/register')
+                .send(userData);
+
+            // if (existingEmail) {
+            //     throw createHttpError(400, 'Email already exists');
+            // }
+
+            const users = await userRepository.find();
+
+            expect(response.statusCode).toBe(400);
+
+            expect(users).toHaveLength(1);
         });
     });
 
