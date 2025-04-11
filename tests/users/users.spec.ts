@@ -3,7 +3,7 @@ import app from '../../src/app';
 import { User } from '../../src/entity/User';
 import request from 'supertest';
 import { AppDataSource } from '../../src/config/data-source';
-import truncatetables from './utils/index';
+import { Roles } from '../../src/constants';
 
 describe('POST /auth/register', () => {
     let connection: DataSource;
@@ -13,7 +13,8 @@ describe('POST /auth/register', () => {
     });
     // DataBase truncate
     beforeEach(async () => {
-        await truncatetables(connection);
+        await connection.dropDatabase();
+        await connection.synchronize();
     });
 
     afterAll(async () => {
@@ -108,6 +109,22 @@ describe('POST /auth/register', () => {
             // Assert
             // expect(res.statusCode).toBe(201);
             expect(res.body).toHaveProperty('id');
+        });
+
+        it('should assign a customer role', async () => {
+            const userData = {
+                firstName: 'Vishal',
+                lastName: 'Singh',
+                email: 'vishal@gmail.com',
+                password: '123456',
+            };
+
+            await request(app).post('/auth/register').send(userData);
+
+            const userRepository = connection.getRepository(User);
+            const users = await userRepository.find();
+            expect(users[0]).toHaveProperty('role');
+            expect(users[0].role).toBe(Roles.CUSTOMER);
         });
     });
 
