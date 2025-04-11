@@ -89,6 +89,26 @@ describe('POST /auth/register', () => {
             expect(users[0].email).toBe(userData.email);
             expect(users[0].password).toBe(userData.password);
         });
+
+        it('should return the id of the user', async () => {
+            // Arrange
+            const userData = {
+                firstName: 'Vishal',
+                lastName: 'Singh',
+                email: 'vishal@gmail.com',
+
+                password: '123456',
+            };
+
+            // Act
+            const res = await request(app)
+                .post('/auth/register')
+                .send(userData);
+
+            // Assert
+            // expect(res.statusCode).toBe(201);
+            expect(res.body).toHaveProperty('id');
+        });
     });
 
     describe('Fieds are missing', () => {});
