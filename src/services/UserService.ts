@@ -26,7 +26,6 @@ export class UserService {
             const user = await this.userRepository.save({
                 firstName,
                 lastName,
-
                 email,
                 password: hashedPassword,
                 role: Roles.CUSTOMER,
